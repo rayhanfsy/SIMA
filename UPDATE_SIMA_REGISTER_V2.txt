@@ -1,0 +1,34 @@
+SIMA REGISTER V2 - SURAT MASUK & SURAT KELUAR
+============================================================
+
+Perubahan utama:
+1. Tabel Surat Masuk mengikuti buku register:
+   NO. URUT | SURAT MASUK (TANGGAL, NOMOR) | NAMA, PEKERJAAN DAN ALAMAT PENGIRIM | PERIHAL/URAIAN POKOK MASALAH | KETERANGAN | DOKUMEN
+2. Tabel Surat Keluar mengikuti buku register:
+   NO. URUT | SURAT KELUAR (TANGGAL, NOMOR) | DIKIRIM KEPADA | PERIHAL/URAIAN POKOK MASALAH | KETERANGAN | DOKUMEN
+3. Modal tambah surat mengikuti susunan kolom register.
+4. Upload menerima PDF/JPG/JPEG/PNG/WEBP/GIF maksimal 5 MB.
+5. Gambar dapat dipratinjau sebelum disimpan.
+6. Dokumen/gambar dapat dilihat melalui modal pratinjau di aplikasi.
+7. File tidak lagi bergantung pada URL public/storage untuk tombol Lihat.
+8. Perbaikan public/storage yang sebelumnya dapat berupa file kosong.
+9. Cache Blade lama dibersihkan saat container mulai.
+
+SETELAH MENGGANTI PROJECT (DOCKER):
+-----------------------------------
+docker compose down
+docker compose up -d --build
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan optimize:clear
+
+Lalu browser: Ctrl + F5.
+
+TANPA DOCKER:
+-------------
+php artisan migrate --force
+php artisan optimize:clear
+php artisan storage:link --force
+php artisan serve
+
+Catatan:
+Migration baru menambahkan kolom nomor_urut. Data lama akan diisi nomor urut awal dari ID record agar tidak kosong.

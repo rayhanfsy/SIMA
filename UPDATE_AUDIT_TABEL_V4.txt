@@ -1,0 +1,12 @@
+SIMA - Audit Keamanan Table Fit V4
+
+Perubahan tampilan:
+- Filter dibuat grid 12 kolom agar tombol Terapkan tidak terpotong.
+- Tabel memakai layout fixed dengan proporsi kolom yang seimbang.
+- Lebar kolom: Waktu 16%, Event 15%, Pengguna 18%, Deskripsi 36%, IP 15%.
+- Padding dan ukuran font dibuat lebih rapat agar tabel nyaman dilihat pada desktop/laptop.
+- Kolom deskripsi dan IP membungkus teks dengan aman.
+- Tabel tetap responsive dengan horizontal scroll jika layar sempit.
+- Pagination dibuat responsive.
+
+Tidak ada perubahan database/controller. Cukup overwrite file lalu jalankan optimize:clear dan Ctrl+F5.
