@@ -104,8 +104,13 @@
     <aside class="w-64 bg-surface border-r border-borderline flex flex-col justify-between hidden md:flex shrink-0">
         <div>
             <!-- Header Sidebar: Logo & Nama Aplikasi -->
-            <div class="h-16 flex items-center px-6 border-b border-borderline">
-                <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-12 w-12 object-contain">
+            <div class="h-16 flex items-center gap-3 px-6 border-b border-borderline">
+                <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-12 w-12 object-contain shrink-0">
+                <span class="text-xl text-borderline">|</span>
+                <div class="flex flex-col justify-center leading-tight">
+                    <span class="font-serif text-lg font-medium tracking-tight">SIMA</span>
+                    <span class="text-[10px] text-muted tracking-wide uppercase">Dungus Cariang</span>
+                </div>
             </div>
 
             <!-- Profil User (Di Atas) -->

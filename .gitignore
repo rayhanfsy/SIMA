@@ -4,6 +4,12 @@
 /public/storage
 /storage/*.key
 /storage/app/public/arsip/*
+/bootstrap/cache/*.php
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*.log
 /vendor
 .env
 .env.backup
