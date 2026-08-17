@@ -104,8 +104,13 @@
     <aside class="w-64 bg-surface border-r border-borderline flex flex-col justify-between hidden md:flex shrink-0">
         <div>
             <!-- Header Sidebar: Logo & Nama Aplikasi -->
-            <div class="h-16 flex items-center px-6 border-b border-borderline">
-                <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-12 w-12 object-contain">
+            <div class="h-16 flex items-center gap-3 px-6 border-b border-borderline">
+                <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-12 w-12 object-contain shrink-0">
+                <span class="text-xl text-borderline">|</span>
+                <div class="flex flex-col justify-center leading-tight">
+                    <span class="font-serif text-lg font-medium tracking-tight">SIMA</span>
+                    <span class="text-[10px] text-muted tracking-wide uppercase">Dungus Cariang</span>
+                </div>
             </div>
 
             <!-- Profil User (Di Atas) -->
@@ -133,9 +138,14 @@
                 <a href="{{ route('disposisi') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('disposisi') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
                     <i class="ph-fill ph-files text-lg"></i> Disposisi
                 </a>
-                @if(auth()->user()->role === 'lurah')
+                @if(auth()->user()->hasRole('lurah', 'admin'))
                 <a href="{{ route('audit') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('audit') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
                     <i class="ph-fill ph-shield-check text-lg"></i> Audit Keamanan
+                </a>
+                @endif
+                @if(auth()->user()->hasRole('admin'))
+                <a href="{{ route('akun') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('akun') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
+                    <i class="ph-fill ph-users-three text-lg"></i> Manajemen Akun
                 </a>
                 @endif
             </nav>
@@ -169,6 +179,25 @@
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Dipakai oleh modal tambah/edit surat masuk & surat keluar.
+        function previewSelectedRegisterFile(input, imageId, nameId) {
+            const image = document.getElementById(imageId);
+            const name = document.getElementById(nameId);
+            const file = input.files && input.files[0] ? input.files[0] : null;
+
+            image.classList.add('hidden');
+            image.removeAttribute('src');
+            name.textContent = '';
+
+            if (!file) return;
+
+            name.textContent = 'File dipilih: ' + file.name;
+            if (file.type.startsWith('image/')) {
+                image.src = URL.createObjectURL(file);
+                image.classList.remove('hidden');
+            }
+        }
     </script>
 </body>
 </html>

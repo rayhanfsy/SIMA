@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\AccountController;
 use App\Models\AuditLog;
 
 // ----------------------------------------------------
@@ -67,15 +68,27 @@ Route::middleware('auth')->group(function () {
     // Surat Masuk
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('surat-masuk');
     Route::post('/surat-masuk', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
+    Route::put('/surat-masuk/{suratMasuk}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
     Route::get('/surat-masuk/{suratMasuk}/file', [SuratMasukController::class, 'file'])->name('surat-masuk.file');
+    Route::delete('/surat-masuk/{suratMasuk}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
 
     // Surat Keluar & Disposisi (View Only Sementara)
     // Ganti route surat keluar menjadi ini:
     Route::get('/surat-keluar', [SuratKeluarController::class, 'index'])->name('surat-keluar');
     Route::post('/surat-keluar', [SuratKeluarController::class, 'store'])->name('surat-keluar.store');
+    Route::put('/surat-keluar/{suratKeluar}', [SuratKeluarController::class, 'update'])->name('surat-keluar.update');
     Route::get('/surat-keluar/{suratKeluar}/file', [SuratKeluarController::class, 'file'])->name('surat-keluar.file');
+    Route::delete('/surat-keluar/{suratKeluar}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
+
     Route::get('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'index'])->name('disposisi');
     Route::post('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'store'])->name('disposisi.store');
+    Route::patch('/disposisi/{disposisi}/selesai', [\App\Http\Controllers\DisposisiController::class, 'selesai'])->name('disposisi.selesai');
 
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit');
+
+    // Manajemen Akun (khusus admin)
+    Route::get('/akun', [AccountController::class, 'index'])->name('akun');
+    Route::post('/akun', [AccountController::class, 'store'])->name('akun.store');
+    Route::put('/akun/{akun}', [AccountController::class, 'update'])->name('akun.update');
+    Route::delete('/akun/{akun}', [AccountController::class, 'destroy'])->name('akun.destroy');
 });

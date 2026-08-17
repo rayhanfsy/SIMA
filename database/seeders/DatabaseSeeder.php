@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     {
         $password = Hash::make('Berkibar!123');
 
-        User::updateOrCreate(['email' => 'admin@kelurahan.go.id'], [
+        User::updateOrCreate(['email' => 'staf@kelurahan.go.id'], [
             'name' => 'Staf Pelayanan',
             'role' => 'staf',
             'password' => $password,
@@ -21,6 +21,12 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(['email' => 'lurah@kelurahan.go.id'], [
             'name' => 'Bapak Lurah',
             'role' => 'lurah',
+            'password' => $password,
+        ]);
+
+        User::updateOrCreate(['email' => 'admin@kelurahan.go.id'], [
+            'name' => 'Administrator',
+            'role' => 'admin',
             'password' => $password,
         ]);
     }

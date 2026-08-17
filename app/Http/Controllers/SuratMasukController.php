@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\SuratMasuk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SuratMasukController extends Controller
@@ -27,7 +28,7 @@ class SuratMasukController extends Controller
         }
 
         return view('surat.masuk', [
-            'surat' => $query->get(),
+            'surat' => $query->paginate(15)->withQueryString(),
         ]);
     }
 
@@ -38,20 +39,9 @@ class SuratMasukController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nomor_urut' => 'required|string|max:50|unique:surat_masuks,nomor_urut',
-            'nomor_surat' => 'required|string|max:255|unique:surat_masuks,nomor_surat',
-            'tanggal_surat' => 'required|date',
-            'pengirim' => 'required|string|max:1000',
-            'perihal' => 'required|string|max:2000',
-            'keterangan' => 'nullable|string|max:2000',
-            'file_pdf' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp,gif|max:5120',
-        ], [
-            'nomor_urut.required' => 'Nomor urut register wajib diisi.',
-            'nomor_urut.unique' => 'Nomor urut register sudah digunakan.',
-            'file_pdf.mimes' => 'Dokumen harus berupa PDF atau gambar JPG, JPEG, PNG, WEBP, atau GIF.',
-            'file_pdf.max' => 'Ukuran dokumen maksimal 5 MB.',
-        ]);
+        abort_unless(auth()->user()->hasRole('staf', 'admin'), 403);
+
+        $data = $request->validate($this->rules(), $this->messages());
 
         // Struktur database lama memiliki tanggal_diterima. Register fisik hanya
         // memakai satu kolom tanggal, sehingga nilai ini disamakan agar kompatibel.
@@ -65,6 +55,67 @@ class SuratMasukController extends Controller
         AuditLog::log('DATA.MUTATION', "Menambahkan Surat Masuk register {$data['nomor_urut']} nomor {$data['nomor_surat']}");
 
         return back()->with('success', 'Surat masuk berhasil disimpan.');
+    }
+
+    public function update(Request $request, SuratMasuk $suratMasuk)
+    {
+        abort_unless(auth()->user()->hasRole('staf', 'admin'), 403);
+
+        $data = $request->validate($this->rules($suratMasuk->id), $this->messages());
+        $data['tanggal_diterima'] = $data['tanggal_surat'];
+
+        if ($request->hasFile('file_pdf')) {
+            if ($suratMasuk->file_pdf) {
+                Storage::disk('public')->delete($suratMasuk->file_pdf);
+            }
+            $data['file_pdf'] = $request->file('file_pdf')->store('arsip/masuk', 'public');
+        }
+
+        $suratMasuk->update($data);
+        AuditLog::log('DATA.MUTATION', "Memperbarui Surat Masuk register {$suratMasuk->nomor_urut} nomor {$suratMasuk->nomor_surat}.");
+
+        return back()->with('success', 'Surat masuk berhasil diperbarui.');
+    }
+
+    public function destroy(SuratMasuk $suratMasuk)
+    {
+        abort_unless(auth()->user()->hasRole('staf', 'admin'), 403);
+
+        if ($suratMasuk->file_pdf) {
+            Storage::disk('public')->delete($suratMasuk->file_pdf);
+        }
+
+        AuditLog::log('DATA.MUTATION', "Menghapus Surat Masuk register {$suratMasuk->nomor_urut} nomor {$suratMasuk->nomor_surat}.");
+        $suratMasuk->delete();
+
+        return back()->with('success', 'Surat masuk berhasil dihapus.');
+    }
+
+    /**
+     * Aturan validasi dipakai bareng oleh store() dan update().
+     * $ignoreId diisi saat edit supaya unique check tidak bentrok dengan data itu sendiri.
+     */
+    private function rules(?int $ignoreId = null): array
+    {
+        return [
+            'nomor_urut' => ['required', 'string', 'max:50', Rule::unique('surat_masuks', 'nomor_urut')->ignore($ignoreId)],
+            'nomor_surat' => ['required', 'string', 'max:255', Rule::unique('surat_masuks', 'nomor_surat')->ignore($ignoreId)],
+            'tanggal_surat' => 'required|date',
+            'pengirim' => 'required|string|max:1000',
+            'perihal' => 'required|string|max:2000',
+            'keterangan' => 'nullable|string|max:2000',
+            'file_pdf' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp,gif|max:5120',
+        ];
+    }
+
+    private function messages(): array
+    {
+        return [
+            'nomor_urut.required' => 'Nomor urut register wajib diisi.',
+            'nomor_urut.unique' => 'Nomor urut register sudah digunakan.',
+            'file_pdf.mimes' => 'Dokumen harus berupa PDF atau gambar JPG, JPEG, PNG, WEBP, atau GIF.',
+            'file_pdf.max' => 'Ukuran dokumen maksimal 5 MB.',
+        ];
     }
 
     private function serveDocument(Request $request, ?string $storedPath): BinaryFileResponse

@@ -7,9 +7,11 @@
         <h1 class="font-serif text-4xl font-medium tracking-tight">Surat Masuk</h1>
         <p class="text-sm text-muted mt-2">Register surat masuk sesuai format buku agenda.</p>
     </div>
-    <button onclick="document.getElementById('modalTambah').showModal()" class="btn-primary text-sm self-start sm:self-auto">
+    @if(auth()->user()->hasRole('staf', 'admin'))
+    <button onclick="openTambahMasuk()" class="btn-primary text-sm self-start sm:self-auto">
         + Tambah Surat Masuk
     </button>
+    @endif
 </header>
 
 @if(session('success'))
@@ -48,6 +50,7 @@
                     <th rowspan="2" class="px-4 py-3 font-medium text-center align-middle min-w-[320px] border-l border-borderline">PERIHAL / URAIAN<br>POKOK MASALAH</th>
                     <th rowspan="2" class="px-4 py-3 font-medium text-center align-middle min-w-[220px] border-l border-borderline">KETERANGAN</th>
                     <th rowspan="2" class="px-4 py-3 font-medium text-center align-middle w-40 border-l border-borderline">DOKUMEN</th>
+                    <th rowspan="2" class="px-4 py-3 font-medium text-center align-middle w-24 border-l border-borderline">AKSI</th>
                 </tr>
                 <tr class="border-b border-borderline">
                     <th class="px-4 py-3 font-medium text-center w-36 border-l border-borderline">TANGGAL</th>
@@ -88,16 +91,36 @@
                                 <span class="text-muted text-xs italic">Tidak ada file</span>
                             @endif
                         </td>
+                        <td class="px-4 py-4 text-center border-l border-borderline">
+                            @if(auth()->user()->hasRole('staf', 'admin'))
+                                <div class="flex items-center justify-center gap-3">
+                                    <button
+                                        type="button"
+                                        onclick="openEditMasuk({{ \Illuminate\Support\Js::from($s->id) }}, {{ \Illuminate\Support\Js::from($s->nomor_urut) }}, {{ \Illuminate\Support\Js::from(\Carbon\Carbon::parse($s->tanggal_surat)->format('Y-m-d')) }}, {{ \Illuminate\Support\Js::from($s->nomor_surat) }}, {{ \Illuminate\Support\Js::from($s->pengirim) }}, {{ \Illuminate\Support\Js::from($s->perihal) }}, {{ \Illuminate\Support\Js::from($s->keterangan) }})"
+                                        class="text-ink hover:underline text-xs font-medium"
+                                    >Edit</button>
+                                    <form action="{{ route('surat-masuk.destroy', $s) }}" method="POST" onsubmit="return confirm('Hapus surat masuk register {{ $s->nomor_urut }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-inkRed hover:underline text-xs font-medium">Hapus</button>
+                                    </form>
+                                </div>
+                            @else
+                                <span class="text-muted text-xs">-</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-14 text-center text-muted">Belum ada data surat masuk.</td>
+                        <td colspan="8" class="px-6 py-14 text-center text-muted">Belum ada data surat masuk.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </section>
+
+<div class="mt-6 reveal">{{ $surat->links() }}</div>
 
 @include('surat.modals.tambah_masuk')
 @include('surat.modals.preview_dokumen')

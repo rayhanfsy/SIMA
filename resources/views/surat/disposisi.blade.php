@@ -6,12 +6,18 @@
     <div>
         <h1 class="font-serif text-4xl font-medium tracking-tight">Disposisi</h1>
     </div>
-    @if(auth()->user()->role === 'lurah')
+    @if(auth()->user()->hasRole('lurah', 'admin'))
     <button onclick="document.getElementById('modalDisposisi').showModal()" class="btn-primary text-sm">
         + Buat Disposisi
     </button>
     @endif
 </header>
+
+@if(session('success'))
+    <div class="mb-6 p-3 rounded-md bg-paleGreen text-inkGreen text-sm border border-[#D7E5D5] reveal">
+        {{ session('success') }}
+    </div>
+@endif
 
 <div class="mb-6 flex justify-between items-center reveal" style="transition-delay: 50ms;">
     <form action="{{ route('disposisi') }}" method="GET" class="relative w-full max-w-sm">
@@ -54,14 +60,14 @@
                     </span>
                 </td>
                 <td class="px-6 py-4 text-right">
-                    @if($d->status !== 'Selesai' && auth()->user()->role !== 'staf')
+                    @if($d->status !== 'Selesai' && auth()->user()->hasRole('staf', 'admin'))
                     <form action="{{ route('disposisi.selesai', $d->id) }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="text-xs font-medium text-ink hover:underline">Tandai Selesai</button>
                     </form>
                     @else
-                    <span class="text-muted text-xs italic">Selesai</span>
+                    <span class="text-muted text-xs">-</span>
                     @endif
                 </td>
             </tr>
@@ -73,6 +79,8 @@
         </tbody>
     </table>
 </section>
+
+<div class="mt-6 reveal">{{ $disposisi->links() }}</div>
 
 @include('surat.modals.tambah_disposisi')
 @endsection

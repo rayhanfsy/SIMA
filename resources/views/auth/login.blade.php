@@ -7,9 +7,21 @@
     <div class="bento-card w-full max-w-sm">
         <div class="mb-8 text-center">
             <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-20 w-20 object-contain mx-auto mb-3">
-            <p class="text-sm text-muted mt-2">Sistem Informasi Manajemen Arsip</p>
-            <p class="text-sm text-muted mt-2">Kelurahan Dungus Cariang</p>
+            <p class="text-sm text-muted mt-2 uppercase">Sistem Informasi Manajemen Arsip</p>
+            <p class="text-sm text-muted mt-2 uppercase">Kelurahan Dungus Cariang</p>
         </div>
+
+        @if(session('status'))
+            <div class="mb-6 p-3 rounded-md bg-canvas border border-borderline text-sm text-center">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        @error('email')
+            <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
+                {{ $message }}
+            </div>
+        @enderror
 
         <form method="POST" action="{{ route('login.post') }}" class="flex flex-col gap-5">
             @csrf

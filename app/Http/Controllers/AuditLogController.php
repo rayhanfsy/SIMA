@@ -9,7 +9,7 @@ class AuditLogController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if(auth()->user()->role !== 'lurah', 403);
+        abort_unless(auth()->user()->hasRole('lurah', 'admin'), 403);
 
         $dateToRules = ['nullable', 'date'];
         if ($request->filled('date_from')) {

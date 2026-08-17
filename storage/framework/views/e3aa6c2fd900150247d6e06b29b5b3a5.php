@@ -7,9 +7,30 @@
     <div class="bento-card w-full max-w-sm">
         <div class="mb-8 text-center">
             <img src="/images/logo-dc.webp" alt="Logo Kelurahan Dunguscariang" class="h-20 w-20 object-contain mx-auto mb-3">
-            <p class="text-sm text-muted mt-2">Sistem Informasi Manajemen Arsip</p>
-            <p class="text-sm text-muted mt-2">Kelurahan Dungus Cariang</p>
+            <p class="text-sm text-muted mt-2 uppercase">Sistem Informasi Manajemen Arsip</p>
+            <p class="text-sm text-muted mt-2 uppercase">Kelurahan Dungus Cariang</p>
         </div>
+
+        <?php if(session('status')): ?>
+            <div class="mb-6 p-3 rounded-md bg-canvas border border-borderline text-sm text-center">
+                <?php echo e(session('status')); ?>
+
+            </div>
+        <?php endif; ?>
+
+        <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+            <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
+                <?php echo e($message); ?>
+
+            </div>
+        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
         <form method="POST" action="<?php echo e(route('login.post')); ?>" class="flex flex-col gap-5">
             <?php echo csrf_field(); ?>
