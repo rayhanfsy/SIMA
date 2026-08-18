@@ -10,8 +10,6 @@
 /storage/framework/testing/*
 /storage/framework/views/*
 /storage/logs/*.log
-/storage/framework/views/*.php
-storage/logs/laravel.log
 /vendor
 .env
 .env.backup
@@ -28,3 +26,4 @@ DOCKER_SETUP.md
 UPDATE_AUDIT_KEAMANAN.txt
 UPDATE_AUDIT_TABEL_V4.txt
 UPDATE_SIMA_REGISTER_V2.txt
+/.prompts/
