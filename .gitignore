@@ -10,6 +10,8 @@
 /storage/framework/testing/*
 /storage/framework/views/*
 /storage/logs/*.log
+/storage/framework/views/*.php
+storage/logs/laravel.log
 /vendor
 .env
 .env.backup
