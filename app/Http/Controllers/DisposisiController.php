@@ -5,10 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\AuditLog;
 use App\Models\Disposisi;
 use App\Models\SuratMasuk;
+use App\Support\ExcelExport;
 use Illuminate\Http\Request;
 
 class DisposisiController extends Controller {
     public function index(Request $request) {
+        return view('surat.disposisi', [
+            'disposisi' => $this->filteredQuery($request)->paginate(15)->withQueryString(),
+            'suratMasuk' => SuratMasuk::latest()->get(),
+        ]);
+    }
+
+    public function export(Request $request) {
+        $rows = $this->filteredQuery($request)->get()->map(fn ($d) => [
+            $d->suratMasuk?->nomor_surat ?? 'Surat Dihapus',
+            $d->tujuan,
+            $d->sifat,
+            $d->isi_disposisi,
+            $d->status,
+        ]);
+
+        return ExcelExport::download('disposisi.xls', ['Dari Surat', 'Tujuan', 'Sifat', 'Instruksi', 'Status'], $rows);
+    }
+
+    private function filteredQuery(Request $request) {
         $query = Disposisi::with('suratMasuk')->latest();
 
         if ($request->filled('search')) {
@@ -22,10 +42,7 @@ class DisposisiController extends Controller {
             });
         }
 
-        return view('surat.disposisi', [
-            'disposisi' => $query->paginate(15)->withQueryString(),
-            'suratMasuk' => SuratMasuk::latest()->get(),
-        ]);
+        return $query;
     }
 
     public function store(Request $request) {
@@ -33,8 +50,8 @@ class DisposisiController extends Controller {
 
         $data = $request->validate([
             'surat_masuk_id' => 'required|exists:surat_masuks,id',
-            'tujuan' => 'required|string|in:Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan,Kasi Pemerintahan',
-            'sifat' => 'required|string',
+            'tujuan' => 'required|string|in:Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan,Kasi Pemerintahan,Sekretaris Lurah',
+            'sifat' => 'required|string|in:Biasa,Penting,Segera',
             'isi_disposisi' => 'required|string',
         ]);
 

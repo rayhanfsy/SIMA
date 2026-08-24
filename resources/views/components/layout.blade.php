@@ -73,8 +73,7 @@
         }
         
         dialog::backdrop { 
-            background: rgba(17, 17, 17, 0.4); 
-            backdrop-filter: blur(2px); 
+            background: rgba(17, 17, 17, 0.45); 
         }
         dialog[open] { 
             animation: fade-in 0.2s ease-out; 
@@ -134,6 +133,9 @@
                 </a>
                 <a href="{{ route('surat-keluar') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('surat-keluar') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
                     <i class="ph-fill ph-paper-plane-tilt text-lg"></i> Surat Keluar
+                </a>
+                <a href="{{ route('surat-keputusan') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('surat-keputusan') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
+                    <i class="ph-fill ph-stamp text-lg"></i> Surat Keputusan
                 </a>
                 <a href="{{ route('disposisi') }}" class="flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('disposisi') ? 'text-ink bg-canvas font-medium' : 'text-muted hover:text-ink hover:bg-canvas' }}">
                     <i class="ph-fill ph-files text-lg"></i> Disposisi
@@ -197,6 +199,16 @@
                 image.src = URL.createObjectURL(file);
                 image.classList.remove('hidden');
             }
+        }
+
+        // Dipakai oleh field password di modal Manajemen Akun.
+        function togglePasswordVisibility(btn) {
+            const input = btn.previousElementSibling;
+            const icon = btn.querySelector('i');
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            icon.classList.toggle('ph-eye', !show);
+            icon.classList.toggle('ph-eye-slash', show);
         }
     </script>
 </body>

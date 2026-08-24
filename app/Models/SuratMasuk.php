@@ -17,4 +17,9 @@ class SuratMasuk extends Model
         'file_pdf',
         'status',
     ];
+
+    public function disposisis()
+    {
+        return $this->hasMany(Disposisi::class);
+    }
 }

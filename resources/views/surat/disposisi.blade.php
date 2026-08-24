@@ -29,6 +29,9 @@
             </a>
         @endif
     </form>
+    <a href="{{ route('disposisi.export', request()->only('search')) }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm border border-borderline rounded-md hover:bg-canvas transition-colors shrink-0">
+        <i class="ph ph-microsoft-excel-logo text-base"></i> Export Excel
+    </a>
 </div>
 
 <section class="bento-card !p-0 overflow-x-auto reveal" style="transition-delay: 100ms;">

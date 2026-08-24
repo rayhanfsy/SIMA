@@ -31,10 +31,11 @@
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Diteruskan Ke</label>
                     <select name="tujuan" class="input-base" required>
-                        <option value="" disabled {{ old('tujuan') ? '' : 'selected' }}>-- Pilih Kasi --</option>
+                        <option value="" disabled {{ old('tujuan') ? '' : 'selected' }}>-- Pilih Tujuan --</option>
                         <option value="Kasi Kesejahteraan Sosial" {{ old('tujuan') == 'Kasi Kesejahteraan Sosial' ? 'selected' : '' }}>Kasi Kesejahteraan Sosial</option>
                         <option value="Kasi Ekonomi dan Pembangunan" {{ old('tujuan') == 'Kasi Ekonomi dan Pembangunan' ? 'selected' : '' }}>Kasi Ekonomi dan Pembangunan</option>
                         <option value="Kasi Pemerintahan" {{ old('tujuan') == 'Kasi Pemerintahan' ? 'selected' : '' }}>Kasi Pemerintahan</option>
+                        <option value="Sekretaris Lurah" {{ old('tujuan') == 'Sekretaris Lurah' ? 'selected' : '' }}>Sekretaris Lurah</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
@@ -43,7 +44,6 @@
                         <option value="Biasa" {{ old('sifat') == 'Biasa' ? 'selected' : '' }}>Biasa</option>
                         <option value="Penting" {{ old('sifat') == 'Penting' ? 'selected' : '' }}>Penting</option>
                         <option value="Segera" {{ old('sifat') == 'Segera' ? 'selected' : '' }}>Segera</option>
-                        <option value="Rahasia" {{ old('sifat') == 'Rahasia' ? 'selected' : '' }}>Rahasia</option>
                     </select>
                 </div>
             </div>

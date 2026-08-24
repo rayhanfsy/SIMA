@@ -26,13 +26,13 @@
         <span class="text-5xl font-sans tracking-tight">{{ $keluar }}</span>
     </div>
     
-    <div class="bento-card flex flex-col gap-3">
+    <a href="{{ route('disposisi') }}" class="bento-card flex flex-col gap-3 hover:border-ink transition-colors">
         <div class="flex items-center gap-2 text-muted mb-2">
             <i class="ph-fill ph-files text-xl"></i>
             <span class="text-xs uppercase tracking-[0.05em] font-medium">Perlu Disposisi</span>
         </div>
-        <span class="text-5xl font-sans tracking-tight text-inkRed">0</span>
-    </div>
+        <span class="text-5xl font-sans tracking-tight text-inkRed">{{ $perluDisposisi }}</span>
+    </a>
 </main>
 
 <!-- Aktivitas Terbaru -->

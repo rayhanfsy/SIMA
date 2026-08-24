@@ -12,21 +12,21 @@
         </div>
 
         @if(session('status'))
-            <div class="mb-6 p-3 rounded-md bg-canvas border border-borderline text-sm text-center">
-                {{ session('status') }}
-            </div>
+        <div class="mb-6 p-3 rounded-md bg-canvas border border-borderline text-sm text-center">
+            {{ session('status') }}
+        </div>
         @endif
 
         @error('email')
-            <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
-                {{ $message }}
-            </div>
+        <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
+            {{ $message }}
+        </div>
         @enderror
 
         @error('captcha')
-            <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
-                <i class="ph ph-shield-warning"></i> {{ $message }}
-            </div>
+        <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
+            <i class="ph ph-shield-warning"></i> {{ $message }}
+        </div>
         @enderror
 
         <form method="POST" action="{{ route('login.post') }}" class="flex flex-col gap-5">
@@ -35,7 +35,7 @@
                 <label class="text-sm font-medium">Email</label>
                 <input type="email" name="email" class="input-base" placeholder="nama@gmail.com" required>
             </div>
-            
+
             <div class="flex flex-col gap-1.5">
                 <label class="text-sm font-medium">Kata Sandi</label>
                 <div class="relative">

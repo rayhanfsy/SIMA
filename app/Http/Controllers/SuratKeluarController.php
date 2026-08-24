@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use App\Models\SuratKeluar;
+use App\Support\ExcelExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -12,6 +13,28 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class SuratKeluarController extends Controller
 {
     public function index(Request $request)
+    {
+        return view('surat.keluar', [
+            'surat' => $this->filteredQuery($request)->paginate(15)->withQueryString(),
+        ]);
+    }
+
+    public function export(Request $request)
+    {
+        $rows = $this->filteredQuery($request)->get()->map(fn ($s) => [
+            $s->nomor_urut,
+            $s->nomor_surat,
+            \Carbon\Carbon::parse($s->tanggal_surat)->format('d-m-Y'),
+            $s->tujuan,
+            $s->perihal,
+            $s->keterangan,
+            $s->status,
+        ]);
+
+        return ExcelExport::download('surat-keluar.xls', ['No Urut', 'Nomor Surat', 'Tanggal', 'Tujuan', 'Perihal', 'Keterangan', 'Status'], $rows);
+    }
+
+    private function filteredQuery(Request $request)
     {
         $query = SuratKeluar::orderByDesc('tanggal_surat')->orderByDesc('id');
 
@@ -27,9 +50,7 @@ class SuratKeluarController extends Controller
             });
         }
 
-        return view('surat.keluar', [
-            'surat' => $query->paginate(15)->withQueryString(),
-        ]);
+        return $query;
     }
 
     public function file(Request $request, SuratKeluar $suratKeluar): BinaryFileResponse

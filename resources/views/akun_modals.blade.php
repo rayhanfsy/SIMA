@@ -25,7 +25,12 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Kata Sandi</label>
-                <input type="password" name="password" class="input-base" minlength="8" required>
+                <div class="relative">
+                    <input type="password" name="password" class="input-base w-full pr-10" minlength="8" required>
+                    <button type="button" onclick="togglePasswordVisibility(this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Role</label>
@@ -74,7 +79,12 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Kata Sandi Baru</label>
-                <input type="password" name="password" class="input-base" minlength="8" placeholder="Kosongkan jika tidak diubah">
+                <div class="relative">
+                    <input type="password" name="password" class="input-base w-full pr-10" minlength="8" placeholder="Kosongkan jika tidak diubah">
+                    <button type="button" onclick="togglePasswordVisibility(this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Role</label>

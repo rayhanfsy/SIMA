@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
-use App\Models\SuratMasuk;
+use App\Models\SuratKeputusan;
 use App\Support\ExcelExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class SuratMasukController extends Controller
+class SuratKeputusanController extends Controller
 {
     public function index(Request $request)
     {
-        return view('surat.masuk', [
+        return view('surat.keputusan', [
             'surat' => $this->filteredQuery($request)->paginate(15)->withQueryString(),
         ]);
     }
@@ -23,27 +23,25 @@ class SuratMasukController extends Controller
     {
         $rows = $this->filteredQuery($request)->get()->map(fn ($s) => [
             $s->nomor_urut,
-            $s->nomor_surat,
-            \Carbon\Carbon::parse($s->tanggal_surat)->format('d-m-Y'),
-            $s->pengirim,
+            $s->nomor_sk,
+            \Carbon\Carbon::parse($s->tanggal_sk)->format('d-m-Y'),
             $s->perihal,
             $s->keterangan,
         ]);
 
-        return ExcelExport::download('surat-masuk.xls', ['No Urut', 'Nomor Surat', 'Tanggal', 'Pengirim', 'Perihal', 'Keterangan'], $rows);
+        return ExcelExport::download('surat-keputusan.xls', ['No Urut', 'Nomor SK', 'Tanggal SK', 'Perihal', 'Keterangan'], $rows);
     }
 
     private function filteredQuery(Request $request)
     {
-        $query = SuratMasuk::orderByDesc('tanggal_surat')->orderByDesc('id');
+        $query = SuratKeputusan::orderByDesc('tanggal_sk')->orderByDesc('id');
 
         if ($request->filled('search')) {
             $search = trim($request->search);
 
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_urut', 'like', "%{$search}%")
-                    ->orWhere('nomor_surat', 'like', "%{$search}%")
-                    ->orWhere('pengirim', 'like', "%{$search}%")
+                    ->orWhere('nomor_sk', 'like', "%{$search}%")
                     ->orWhere('perihal', 'like', "%{$search}%")
                     ->orWhere('keterangan', 'like', "%{$search}%");
             });
@@ -52,9 +50,9 @@ class SuratMasukController extends Controller
         return $query;
     }
 
-    public function file(Request $request, SuratMasuk $suratMasuk): BinaryFileResponse
+    public function file(Request $request, SuratKeputusan $suratKeputusan): BinaryFileResponse
     {
-        return $this->serveDocument($request, $suratMasuk->file_pdf);
+        return $this->serveDocument($request, $suratKeputusan->file_pdf);
     }
 
     public function store(Request $request)
@@ -63,52 +61,47 @@ class SuratMasukController extends Controller
 
         $data = $request->validate($this->rules(), $this->messages());
 
-        // Struktur database lama memiliki tanggal_diterima. Register fisik hanya
-        // memakai satu kolom tanggal, sehingga nilai ini disamakan agar kompatibel.
-        $data['tanggal_diterima'] = $data['tanggal_surat'];
-
         if ($request->hasFile('file_pdf')) {
-            $data['file_pdf'] = $request->file('file_pdf')->store('arsip/masuk', 'public');
+            $data['file_pdf'] = $request->file('file_pdf')->store('arsip/keputusan', 'public');
         }
 
-        SuratMasuk::create($data);
-        AuditLog::log('DATA.MUTATION', "Menambahkan Surat Masuk register {$data['nomor_urut']} nomor {$data['nomor_surat']}");
+        SuratKeputusan::create($data);
+        AuditLog::log('DATA.MUTATION', "Menambahkan Surat Keputusan register {$data['nomor_urut']} nomor {$data['nomor_sk']}");
 
-        return back()->with('success', 'Surat masuk berhasil disimpan.');
+        return back()->with('success', 'Surat keputusan berhasil disimpan.');
     }
 
-    public function update(Request $request, SuratMasuk $suratMasuk)
+    public function update(Request $request, SuratKeputusan $suratKeputusan)
     {
         abort_unless(auth()->user()->hasRole('staf', 'admin'), 403);
 
-        $data = $request->validate($this->rules($suratMasuk->id), $this->messages());
-        $data['tanggal_diterima'] = $data['tanggal_surat'];
+        $data = $request->validate($this->rules($suratKeputusan->id), $this->messages());
 
         if ($request->hasFile('file_pdf')) {
-            if ($suratMasuk->file_pdf) {
-                Storage::disk('public')->delete($suratMasuk->file_pdf);
+            if ($suratKeputusan->file_pdf) {
+                Storage::disk('public')->delete($suratKeputusan->file_pdf);
             }
-            $data['file_pdf'] = $request->file('file_pdf')->store('arsip/masuk', 'public');
+            $data['file_pdf'] = $request->file('file_pdf')->store('arsip/keputusan', 'public');
         }
 
-        $suratMasuk->update($data);
-        AuditLog::log('DATA.MUTATION', "Memperbarui Surat Masuk register {$suratMasuk->nomor_urut} nomor {$suratMasuk->nomor_surat}.");
+        $suratKeputusan->update($data);
+        AuditLog::log('DATA.MUTATION', "Memperbarui Surat Keputusan register {$suratKeputusan->nomor_urut} nomor {$suratKeputusan->nomor_sk}.");
 
-        return back()->with('success', 'Surat masuk berhasil diperbarui.');
+        return back()->with('success', 'Surat keputusan berhasil diperbarui.');
     }
 
-    public function destroy(SuratMasuk $suratMasuk)
+    public function destroy(SuratKeputusan $suratKeputusan)
     {
         abort_unless(auth()->user()->hasRole('staf', 'admin'), 403);
 
-        if ($suratMasuk->file_pdf) {
-            Storage::disk('public')->delete($suratMasuk->file_pdf);
+        if ($suratKeputusan->file_pdf) {
+            Storage::disk('public')->delete($suratKeputusan->file_pdf);
         }
 
-        AuditLog::log('DATA.MUTATION', "Menghapus Surat Masuk register {$suratMasuk->nomor_urut} nomor {$suratMasuk->nomor_surat}.");
-        $suratMasuk->delete();
+        AuditLog::log('DATA.MUTATION', "Menghapus Surat Keputusan register {$suratKeputusan->nomor_urut} nomor {$suratKeputusan->nomor_sk}.");
+        $suratKeputusan->delete();
 
-        return back()->with('success', 'Surat masuk berhasil dihapus.');
+        return back()->with('success', 'Surat keputusan berhasil dihapus.');
     }
 
     /**
@@ -118,10 +111,9 @@ class SuratMasukController extends Controller
     private function rules(?int $ignoreId = null): array
     {
         return [
-            'nomor_urut' => ['required', 'string', 'max:50', Rule::unique('surat_masuks', 'nomor_urut')->ignore($ignoreId)],
-            'nomor_surat' => ['required', 'string', 'max:255', Rule::unique('surat_masuks', 'nomor_surat')->ignore($ignoreId)],
-            'tanggal_surat' => 'required|date',
-            'pengirim' => 'required|string|max:1000',
+            'nomor_urut' => ['required', 'string', 'max:50', Rule::unique('surat_keputusans', 'nomor_urut')->ignore($ignoreId)],
+            'nomor_sk' => ['required', 'string', 'max:255', Rule::unique('surat_keputusans', 'nomor_sk')->ignore($ignoreId)],
+            'tanggal_sk' => 'required|date',
             'perihal' => 'required|string|max:2000',
             'keterangan' => 'nullable|string|max:2000',
             'file_pdf' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp,gif|max:5120',
@@ -133,6 +125,7 @@ class SuratMasukController extends Controller
         return [
             'nomor_urut.required' => 'Nomor urut register wajib diisi.',
             'nomor_urut.unique' => 'Nomor urut register sudah digunakan.',
+            'nomor_sk.unique' => 'Nomor SK sudah terdaftar.',
             'file_pdf.mimes' => 'Dokumen harus berupa PDF atau gambar JPG, JPEG, PNG, WEBP, atau GIF.',
             'file_pdf.max' => 'Ukuran dokumen maksimal 5 MB.',
         ];

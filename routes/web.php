@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\SuratKeluarController;
+use App\Http\Controllers\SuratKeputusanController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AccountController;
 use App\Models\AuditLog;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard', [
             'masuk' => \App\Models\SuratMasuk::count(),
             'keluar' => \App\Models\SuratKeluar::count(),
+            'perluDisposisi' => \App\Models\SuratMasuk::whereDoesntHave('disposisis')->count(),
             'terbaru' => \App\Models\SuratMasuk::latest()->take(5)->get()
         ]); 
     })->name('dashboard');
@@ -67,6 +69,7 @@ Route::middleware('auth')->group(function () {
 
     // Surat Masuk
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('surat-masuk');
+    Route::get('/surat-masuk/export', [SuratMasukController::class, 'export'])->name('surat-masuk.export');
     Route::post('/surat-masuk', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
     Route::put('/surat-masuk/{suratMasuk}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
     Route::get('/surat-masuk/{suratMasuk}/file', [SuratMasukController::class, 'file'])->name('surat-masuk.file');
@@ -75,12 +78,22 @@ Route::middleware('auth')->group(function () {
     // Surat Keluar & Disposisi (View Only Sementara)
     // Ganti route surat keluar menjadi ini:
     Route::get('/surat-keluar', [SuratKeluarController::class, 'index'])->name('surat-keluar');
+    Route::get('/surat-keluar/export', [SuratKeluarController::class, 'export'])->name('surat-keluar.export');
     Route::post('/surat-keluar', [SuratKeluarController::class, 'store'])->name('surat-keluar.store');
     Route::put('/surat-keluar/{suratKeluar}', [SuratKeluarController::class, 'update'])->name('surat-keluar.update');
     Route::get('/surat-keluar/{suratKeluar}/file', [SuratKeluarController::class, 'file'])->name('surat-keluar.file');
     Route::delete('/surat-keluar/{suratKeluar}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
 
+    // Surat Keputusan (SK)
+    Route::get('/surat-keputusan', [SuratKeputusanController::class, 'index'])->name('surat-keputusan');
+    Route::get('/surat-keputusan/export', [SuratKeputusanController::class, 'export'])->name('surat-keputusan.export');
+    Route::post('/surat-keputusan', [SuratKeputusanController::class, 'store'])->name('surat-keputusan.store');
+    Route::put('/surat-keputusan/{suratKeputusan}', [SuratKeputusanController::class, 'update'])->name('surat-keputusan.update');
+    Route::get('/surat-keputusan/{suratKeputusan}/file', [SuratKeputusanController::class, 'file'])->name('surat-keputusan.file');
+    Route::delete('/surat-keputusan/{suratKeputusan}', [SuratKeputusanController::class, 'destroy'])->name('surat-keputusan.destroy');
+
     Route::get('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'index'])->name('disposisi');
+    Route::get('/disposisi/export', [\App\Http\Controllers\DisposisiController::class, 'export'])->name('disposisi.export');
     Route::post('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'store'])->name('disposisi.store');
     Route::patch('/disposisi/{disposisi}/selesai', [\App\Http\Controllers\DisposisiController::class, 'selesai'])->name('disposisi.selesai');
 
