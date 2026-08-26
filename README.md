@@ -1,59 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIMA — Sistem Informasi Manajemen Arsip
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web pencatatan arsip surat untuk **Kelurahan Dungus Cariang**, Kecamatan Andir, Kota Bandung. Dibangun sebagai proyek Kerja Praktik.
 
-## About Laravel
+SIMA mendigitalkan buku agenda register surat (masuk, keluar, keputusan) yang selama ini dicatat manual, dilengkapi fitur disposisi surat dan audit keamanan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Modul | Deskripsi |
+|-------|-----------|
+| **Surat Masuk** | CRUD register surat masuk: nomor urut, tanggal, nomor surat, pengirim, perihal, keterangan, upload dokumen (PDF/gambar) |
+| **Surat Keluar** | CRUD register surat keluar: nomor urut, tanggal, nomor surat, tujuan, perihal, keterangan, upload dokumen |
+| **Surat Keputusan** | CRUD register SK: nomor urut, nomor SK, tanggal SK, perihal, keterangan, upload dokumen |
+| **Disposisi** | Lurah membuat disposisi dari surat masuk ke Kasi/Sekretaris. Staf menandai selesai |
+| **Audit Keamanan** | Log aktivitas login, logout, dan setiap mutasi data. Filter berdasarkan event, tanggal, keyword |
+| **Manajemen Akun** | Admin mengelola akun pengguna (staf, lurah, admin) |
+| **Export Excel** | Setiap register bisa diexport ke file `.xls` tanpa library tambahan |
+| **Pratinjau Dokumen** | Preview PDF dan gambar langsung di browser tanpa download |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Role & Hak Akses
 
-## Learning Laravel
+| Role | Hak Akses |
+|------|-----------|
+| **Staf** | CRUD surat (masuk, keluar, keputusan), tandai disposisi selesai |
+| **Lurah** | Buat & edit disposisi, lihat audit keamanan |
+| **Admin** | Semua hak staf + lurah + manajemen akun |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend:** Laravel 11, PHP 8.2+
+- **Database:** MySQL (Docker) / SQLite (lokal)
+- **Frontend:** Blade templates, Tailwind CSS (CDN), Phosphor Icons
+- **Deployment:** Docker + Docker Compose
 
-## Laravel Sponsors
+## Instalasi Lokal
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+# 1. Clone & install dependencies
+git clone <repo-url> && cd SIMA
+composer install
 
-### Premium Partners
+# 2. Setup environment
+cp .env.example .env
+php artisan key:generate
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# 3. Konfigurasi database di .env
+#    Untuk SQLite: DB_CONNECTION=sqlite
+#    Untuk MySQL: isi DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
-## Contributing
+# 4. Migrasi & seed
+php artisan migrate
+php artisan db:seed   # jika ada seeder
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 5. Storage link (untuk upload dokumen)
+php artisan storage:link
 
-## Code of Conduct
+# 6. Jalankan
+php artisan serve
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Akses di `http://localhost:8000`.
 
-## Security Vulnerabilities
+## Docker
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker-compose up -d
+```
 
-## License
+Detail konfigurasi Docker lihat [`DOCKER_SETUP.md`](DOCKER_SETUP.md).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Struktur Direktori
+
+```
+app/
+├── Http/Controllers/
+│   ├── SuratMasukController.php
+│   ├── SuratKeluarController.php
+│   ├── SuratKeputusanController.php
+│   ├── DisposisiController.php
+│   ├── AuditLogController.php
+│   └── AccountController.php
+├── Models/
+│   ├── SuratMasuk.php
+│   ├── SuratKeluar.php
+│   ├── SuratKeputusan.php
+│   ├── Disposisi.php
+│   ├── AuditLog.php
+│   └── User.php
+└── Support/
+    └── ExcelExport.php        # Export Excel tanpa dependency
+
+resources/views/
+├── dashboard.blade.php
+├── akun.blade.php
+├── audit.blade.php
+└── surat/
+    ├── masuk.blade.php
+    ├── keluar.blade.php
+    ├── keputusan.blade.php
+    ├── disposisi.blade.php
+    └── modals/                # Modal form tambah/edit
+```
+
+## Lisensi
+
+Proyek Kerja Praktik — Kelurahan Dungus Cariang, Bandung.
