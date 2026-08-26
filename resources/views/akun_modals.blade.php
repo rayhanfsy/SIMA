@@ -114,13 +114,17 @@
 </script>
 
 @if($errors->any())
+@if(old('_akun_id'))
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        @if(old('_akun_id'))
-            openEditAkun({{ \Illuminate\Support\Js::from(old('_akun_id')) }}, {{ \Illuminate\Support\Js::from(old('name')) }}, {{ \Illuminate\Support\Js::from(old('email')) }}, {{ \Illuminate\Support\Js::from(old('role')) }});
-        @else
-            document.getElementById('modalTambahAkun').showModal();
-        @endif
+        openEditAkun({{ \Illuminate\Support\Js::from(old('_akun_id')) }}, {{ \Illuminate\Support\Js::from(old('name')) }}, {{ \Illuminate\Support\Js::from(old('email')) }}, {{ \Illuminate\Support\Js::from(old('role')) }});
     });
 </script>
+@else
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('modalTambahAkun').showModal();
+    });
+</script>
+@endif
 @endif

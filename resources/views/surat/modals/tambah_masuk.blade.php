@@ -2,7 +2,6 @@
     <div class="p-6 sm:p-8 max-h-[92vh] overflow-y-auto">
         <div class="mb-6">
             <h3 id="masukModalTitle" class="font-serif text-2xl">Tambah Surat Masuk</h3>
-            <p class="text-sm text-muted mt-1">Isian mengikuti kolom buku register surat masuk yang Anda kirim.</p>
         </div>
 
         @if($errors->any())
@@ -111,15 +110,22 @@
 </script>
 
 @if($errors->any())
+@if(old('_id'))
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        @if(old('_id'))
-            document.getElementById('formMasuk').action = '/surat-masuk/' + {{ \Illuminate\Support\Js::from(old('_id')) }};
-            document.getElementById('masukMethod').value = 'PUT';
-            document.getElementById('masukModalTitle').textContent = 'Edit Surat Masuk';
-            document.getElementById('masukSubmitBtn').textContent = 'Perbarui Surat Masuk';
-        @endif
+        document.getElementById('formMasuk').action = '/surat-masuk/' + {{ \Illuminate\Support\Js::from(old('_id')) }};
+        document.getElementById('masukMethod').value = 'PUT';
+        document.getElementById('masukModalTitle').textContent = 'Edit Surat Masuk';
+        document.getElementById('masukSubmitBtn').textContent = 'Perbarui Surat Masuk';
+        document.getElementById('modalTambah').showModal();
+    });
+</script>
+@else
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modalTambah').showModal();
     });
 </script>
 @endif
+@endif
+

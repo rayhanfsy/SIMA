@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'index'])->name('disposisi');
     Route::get('/disposisi/export', [\App\Http\Controllers\DisposisiController::class, 'export'])->name('disposisi.export');
     Route::post('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'store'])->name('disposisi.store');
+    Route::put('/disposisi/{disposisi}', [\App\Http\Controllers\DisposisiController::class, 'update'])->name('disposisi.update');
     Route::patch('/disposisi/{disposisi}/selesai', [\App\Http\Controllers\DisposisiController::class, 'selesai'])->name('disposisi.selesai');
 
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit');

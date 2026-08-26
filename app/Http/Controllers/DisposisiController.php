@@ -12,7 +12,7 @@ class DisposisiController extends Controller {
     public function index(Request $request) {
         return view('surat.disposisi', [
             'disposisi' => $this->filteredQuery($request)->paginate(15)->withQueryString(),
-            'suratMasuk' => SuratMasuk::latest()->get(),
+            'suratMasuk' => SuratMasuk::whereDoesntHave('disposisis')->latest()->get(),
         ]);
     }
 
@@ -60,6 +60,22 @@ class DisposisiController extends Controller {
         AuditLog::log('DATA.MUTATION', "Membuat disposisi ID {$disposisi->id} ke {$disposisi->tujuan}.");
 
         return back()->with('success', 'Disposisi berhasil dibuat.');
+    }
+
+    public function update(Request $request, Disposisi $disposisi) {
+        abort_unless(auth()->user()->hasRole('lurah', 'admin'), 403);
+
+        $data = $request->validate([
+            'tujuan' => 'required|string|in:Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan,Kasi Pemerintahan,Sekretaris Lurah',
+            'sifat' => 'required|string|in:Biasa,Penting,Segera',
+            'isi_disposisi' => 'required|string',
+        ]);
+
+        $disposisi->update($data);
+
+        AuditLog::log('DATA.MUTATION', "Mengubah disposisi ID {$disposisi->id}.");
+
+        return back()->with('success', 'Disposisi berhasil diperbarui.');
     }
 
     public function selesai(Disposisi $disposisi) {

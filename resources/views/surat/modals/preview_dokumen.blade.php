@@ -3,7 +3,6 @@
         <div class="flex items-center justify-between gap-4 px-5 py-4 border-b border-borderline">
             <div class="min-w-0">
                 <h3 id="previewDokumenTitle" class="font-serif text-xl truncate">Pratinjau Dokumen</h3>
-                <p class="text-xs text-muted mt-1">PDF dan gambar ditampilkan langsung tanpa bergantung pada public/storage.</p>
             </div>
             <button type="button" onclick="closeDocumentPreview()" class="w-9 h-9 rounded-md border border-borderline hover:bg-canvas flex items-center justify-center shrink-0" aria-label="Tutup pratinjau">
                 <i class="ph ph-x text-lg"></i>

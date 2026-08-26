@@ -100,7 +100,7 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3.5">
-                                <div class="font-semibold text-[13px] leading-5 break-words">{{ $log->user->name ?? 'Sistem' }}</div>
+                                <div class="font-semibold text-[13px] leading-5 break-words">{{ $log->user?->name ?? 'Sistem' }}</div>
                                 <div class="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-muted break-words">
                                     {{ $log->user?->role ?? 'SYSTEM' }}
                                 </div>
