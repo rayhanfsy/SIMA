@@ -22,7 +22,6 @@ yarn-error.log
 .idea/
 .vscode/
 .DS_Store
-DOCKER_SETUP.md
 UPDATE_AUDIT_KEAMANAN.txt
 UPDATE_AUDIT_TABEL_V4.txt
 UPDATE_SIMA_REGISTER_V2.txt
