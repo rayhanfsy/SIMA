@@ -99,7 +99,7 @@
                                 <div class="flex items-center justify-center gap-3">
                                     <button
                                         type="button"
-                                        onclick="openEditKeluar({{ \Illuminate\Support\Js::from($s->id) }}, {{ \Illuminate\Support\Js::from($s->nomor_urut) }}, {{ \Illuminate\Support\Js::from(\Carbon\Carbon::parse($s->tanggal_surat)->format('Y-m-d')) }}, {{ \Illuminate\Support\Js::from($s->nomor_surat) }}, {{ \Illuminate\Support\Js::from($s->tujuan) }}, {{ \Illuminate\Support\Js::from($s->perihal) }}, {{ \Illuminate\Support\Js::from($s->keterangan) }})"
+                                        onclick="openEditKeluar({{ \Illuminate\Support\Js::from($s->id) }}, {{ \Illuminate\Support\Js::from(\Carbon\Carbon::parse($s->tanggal_surat)->format('Y-m-d')) }}, {{ \Illuminate\Support\Js::from($s->nomor_surat) }}, {{ \Illuminate\Support\Js::from($s->tujuan) }}, {{ \Illuminate\Support\Js::from($s->perihal) }}, {{ \Illuminate\Support\Js::from($s->keterangan) }})"
                                         class="text-ink hover:underline text-xs font-medium"
                                     >Edit</button>
                                     <form action="{{ route('surat-keluar.destroy', $s) }}" method="POST" onsubmit="return confirm('Hapus surat keluar register {{ $s->nomor_urut }}?')">

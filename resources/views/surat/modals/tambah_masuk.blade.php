@@ -22,15 +22,11 @@
             <div class="rounded-lg border border-borderline overflow-hidden">
                 <div class="px-4 py-2.5 bg-canvas border-b border-borderline text-xs font-semibold tracking-[0.06em] text-muted uppercase">Surat Masuk</div>
                 <div class="p-4 grid grid-cols-1 sm:grid-cols-12 gap-4">
-                    <div class="sm:col-span-2 flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">No. Urut</label>
-                        <input type="text" name="nomor_urut" id="masukNomorUrut" class="input-base" placeholder="Contoh: 38" value="{{ old('nomor_urut') }}" required>
-                    </div>
-                    <div class="sm:col-span-4 flex flex-col gap-1.5">
+                    <div class="sm:col-span-5 flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Tanggal</label>
                         <input type="date" name="tanggal_surat" id="masukTanggal" class="input-base" value="{{ old('tanggal_surat') }}" required>
                     </div>
-                    <div class="sm:col-span-6 flex flex-col gap-1.5">
+                    <div class="sm:col-span-7 flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Nomor Surat</label>
                         <input type="text" name="nomor_surat" id="masukNomorSurat" class="input-base" placeholder="Nomor surat masuk" value="{{ old('nomor_surat') }}" required>
                     </div>
@@ -89,14 +85,13 @@
         document.getElementById('modalTambah').showModal();
     }
 
-    function openEditMasuk(id, nomorUrut, tanggal, nomorSurat, pengirim, perihal, keterangan) {
+    function openEditMasuk(id, tanggal, nomorSurat, pengirim, perihal, keterangan) {
         document.getElementById('formMasuk').reset();
         document.getElementById('formMasuk').action = '/surat-masuk/' + id;
         document.getElementById('masukMethod').value = 'PUT';
         document.getElementById('masukId').value = id;
         document.getElementById('masukModalTitle').textContent = 'Edit Surat Masuk';
         document.getElementById('masukSubmitBtn').textContent = 'Perbarui Surat Masuk';
-        document.getElementById('masukNomorUrut').value = nomorUrut;
         document.getElementById('masukTanggal').value = tanggal;
         document.getElementById('masukNomorSurat').value = nomorSurat;
         document.getElementById('masukPengirim').value = pengirim;
@@ -128,4 +123,3 @@
 </script>
 @endif
 @endif
-

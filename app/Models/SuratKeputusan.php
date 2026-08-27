@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class SuratKeputusan extends Model
 {
@@ -14,4 +15,14 @@ class SuratKeputusan extends Model
         'keterangan',
         'file_pdf',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->nomor_urut)) {
+                $max = static::max(DB::raw('CAST(nomor_urut AS UNSIGNED)'));
+                $model->nomor_urut = (string) (($max ? (int) $max : static::count()) + 1);
+            }
+        });
+    }
 }

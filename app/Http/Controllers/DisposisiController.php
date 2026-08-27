@@ -25,7 +25,7 @@ class DisposisiController extends Controller {
             $d->status,
         ]);
 
-        return ExcelExport::download('disposisi.xls', ['Dari Surat', 'Tujuan', 'Sifat', 'Instruksi', 'Status'], $rows);
+        return ExcelExport::download('disposisi.xlsx', ['Dari Surat', 'Tujuan', 'Sifat', 'Instruksi', 'Status'], $rows);
     }
 
     private function filteredQuery(Request $request) {

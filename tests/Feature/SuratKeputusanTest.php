@@ -14,7 +14,6 @@ class SuratKeputusanTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'nomor_urut' => '40',
             'nomor_sk' => 'PD.05.02.01/40/SK/Kel.DC/VIII/2026',
             'tanggal_sk' => '2026-08-14',
             'perihal' => 'SK Ketua RT di RW 009 (periode Nov 2023 - Nov 2028)',
@@ -30,7 +29,10 @@ class SuratKeputusanTest extends TestCase
             ->post(route('surat-keputusan.store'), $this->payload())
             ->assertRedirect();
 
-        $this->assertDatabaseHas('surat_keputusans', ['nomor_sk' => 'PD.05.02.01/40/SK/Kel.DC/VIII/2026']);
+        $this->assertDatabaseHas('surat_keputusans', [
+            'nomor_sk' => 'PD.05.02.01/40/SK/Kel.DC/VIII/2026',
+            'nomor_urut' => '1',
+        ]);
     }
 
     public function test_duplicate_nomor_sk_is_rejected(): void
@@ -39,7 +41,7 @@ class SuratKeputusanTest extends TestCase
         SuratKeputusan::create($this->payload());
 
         $this->actingAs($staf)
-            ->post(route('surat-keputusan.store'), $this->payload(['nomor_urut' => '41']))
+            ->post(route('surat-keputusan.store'), $this->payload())
             ->assertSessionHasErrors('nomor_sk');
 
         $this->assertSame(1, SuratKeputusan::count());

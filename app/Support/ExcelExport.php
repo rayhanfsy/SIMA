@@ -2,46 +2,47 @@
 
 namespace App\Support;
 
-use Illuminate\Http\Response;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExcelExport
 {
     /**
-     * Bikin file Excel (.xls, format SpreadsheetML) tanpa dependency tambahan.
+     * Bikin file Excel (.xlsx) pakai PhpSpreadsheet.
      * $rows: iterable, tiap item array nilai sel selaras urutan $headers.
      */
-    public static function download(string $filename, array $headers, iterable $rows): Response
+    public static function download(string $filename, array $headers, iterable $rows): StreamedResponse
     {
-        $xml = '<?xml version="1.0"?>'."\n"
-            .'<?mso-application progid="Excel.Sheet"?>'."\n"
-            .'<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
-            .'<Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#F7F6F3" ss:Pattern="Solid"/></Style></Styles>'
-            .'<Worksheet ss:Name="Sheet1"><Table>';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-        $xml .= '<Row>';
-        foreach ($headers as $head) {
-            $xml .= '<Cell ss:StyleID="Header"><Data ss:Type="String">'.self::esc($head).'</Data></Cell>';
+        // Header row — bold
+        foreach ($headers as $col => $head) {
+            $cell = $sheet->setCellValue([$col + 1, 1], $head);
         }
-        $xml .= '</Row>';
+        $sheet->getStyle('1:1')->getFont()->setBold(true);
 
+        // Data rows
+        $rowNum = 2;
         foreach ($rows as $row) {
-            $xml .= '<Row>';
-            foreach ($row as $cell) {
-                $xml .= '<Cell><Data ss:Type="String">'.self::esc((string) $cell).'</Data></Cell>';
+            foreach (array_values(is_array($row) ? $row : $row->toArray()) as $col => $value) {
+                $sheet->setCellValue([$col + 1, $rowNum], $value);
             }
-            $xml .= '</Row>';
+            $rowNum++;
         }
 
-        $xml .= '</Table></Worksheet></Workbook>';
+        // Auto-size columns
+        foreach (range(1, count($headers)) as $col) {
+            $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+        }
 
-        return response($xml, 200, [
-            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        $writer = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
-    }
-
-    private static function esc(string $value): string
-    {
-        return htmlspecialchars($value, ENT_XML1 | ENT_COMPAT, 'UTF-8');
     }
 }

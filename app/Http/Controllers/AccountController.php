@@ -32,7 +32,6 @@ class AccountController extends Controller
             'role' => 'required|string|in:' . implode(',', self::ROLES),
         ]);
 
-        $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
 
         AuditLog::log('DATA.MUTATION', "Menambahkan akun {$user->email} dengan role {$user->role}.");
@@ -53,8 +52,6 @@ class AccountController extends Controller
 
         if (empty($data['password'])) {
             unset($data['password']);
-        } else {
-            $data['password'] = Hash::make($data['password']);
         }
 
         $akun->update($data);

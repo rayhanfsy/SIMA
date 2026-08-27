@@ -14,7 +14,7 @@ SIMA mendigitalkan buku agenda register surat (masuk, keluar, keputusan) yang se
 | **Disposisi** | Lurah membuat disposisi dari surat masuk ke Kasi/Sekretaris. Staf menandai selesai |
 | **Audit Keamanan** | Log aktivitas login, logout, dan setiap mutasi data. Filter berdasarkan event, tanggal, keyword |
 | **Manajemen Akun** | Admin mengelola akun pengguna (staf, lurah, admin) |
-| **Export Excel** | Setiap register bisa diexport ke file `.xls` tanpa library tambahan |
+| **Export Excel** | Setiap register bisa diexport ke file `.xlsx` (PhpSpreadsheet) |
 | **Pratinjau Dokumen** | Preview PDF dan gambar langsung di browser tanpa download |
 
 ## Role & Hak Akses

@@ -10,7 +10,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $password = Hash::make('Berkibar!123');
+        $password = 'Berkibar!123';
 
         User::updateOrCreate(['email' => 'staf@kelurahan.go.id'], [
             'name' => 'Staf Pelayanan',

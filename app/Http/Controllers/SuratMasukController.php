@@ -30,7 +30,7 @@ class SuratMasukController extends Controller
             $s->keterangan,
         ]);
 
-        return ExcelExport::download('surat-masuk.xls', ['No Urut', 'Nomor Surat', 'Tanggal', 'Pengirim', 'Perihal', 'Keterangan'], $rows);
+        return ExcelExport::download('surat-masuk.xlsx', ['No Urut', 'Nomor Surat', 'Tanggal', 'Pengirim', 'Perihal', 'Keterangan'], $rows);
     }
 
     private function filteredQuery(Request $request)
@@ -71,8 +71,8 @@ class SuratMasukController extends Controller
             $data['file_pdf'] = $request->file('file_pdf')->store('arsip/masuk', 'public');
         }
 
-        SuratMasuk::create($data);
-        AuditLog::log('DATA.MUTATION', "Menambahkan Surat Masuk register {$data['nomor_urut']} nomor {$data['nomor_surat']}");
+        $surat = SuratMasuk::create($data);
+        AuditLog::log('DATA.MUTATION', "Menambahkan Surat Masuk register {$surat->nomor_urut} nomor {$data['nomor_surat']}");
 
         return back()->with('success', 'Surat masuk berhasil disimpan.');
     }
@@ -118,7 +118,6 @@ class SuratMasukController extends Controller
     private function rules(?int $ignoreId = null): array
     {
         return [
-            'nomor_urut' => ['required', 'string', 'max:50', Rule::unique('surat_masuks', 'nomor_urut')->ignore($ignoreId)],
             'nomor_surat' => ['required', 'string', 'max:255', Rule::unique('surat_masuks', 'nomor_surat')->ignore($ignoreId)],
             'tanggal_surat' => 'required|date',
             'pengirim' => 'required|string|max:1000',
@@ -131,45 +130,8 @@ class SuratMasukController extends Controller
     private function messages(): array
     {
         return [
-            'nomor_urut.required' => 'Nomor urut register wajib diisi.',
-            'nomor_urut.unique' => 'Nomor urut register sudah digunakan.',
             'file_pdf.mimes' => 'Dokumen harus berupa PDF atau gambar JPG, JPEG, PNG, WEBP, atau GIF.',
             'file_pdf.max' => 'Ukuran dokumen maksimal 5 MB.',
         ];
-    }
-
-    private function serveDocument(Request $request, ?string $storedPath): BinaryFileResponse
-    {
-        abort_unless($storedPath, 404, 'Dokumen tidak ditemukan.');
-
-        $path = $this->normalizePublicPath($storedPath);
-        abort_unless(Storage::disk('public')->exists($path), 404, 'File dokumen tidak ditemukan di penyimpanan.');
-
-        $absolutePath = Storage::disk('public')->path($path);
-        $mime = Storage::disk('public')->mimeType($path) ?: 'application/octet-stream';
-        $fileName = basename($path);
-
-        if ($request->boolean('download')) {
-            return response()->download($absolutePath, $fileName, [
-                'Content-Type' => $mime,
-                'X-Content-Type-Options' => 'nosniff',
-            ]);
-        }
-
-        return response()->file($absolutePath, [
-            'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="'.addslashes($fileName).'"',
-            'Cache-Control' => 'private, max-age=0, must-revalidate',
-            'X-Content-Type-Options' => 'nosniff',
-        ]);
-    }
-
-    private function normalizePublicPath(string $path): string
-    {
-        $path = str_replace('\\', '/', trim($path));
-        $path = preg_replace('#^https?://[^/]+/storage/#i', '', $path) ?? $path;
-        $path = preg_replace('#^/?storage/#i', '', $path) ?? $path;
-
-        return ltrim($path, '/');
     }
 }

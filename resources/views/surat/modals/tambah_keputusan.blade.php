@@ -22,15 +22,11 @@
             <div class="rounded-lg border border-borderline overflow-hidden">
                 <div class="px-4 py-2.5 bg-canvas border-b border-borderline text-xs font-semibold tracking-[0.06em] text-muted uppercase">Surat Keputusan</div>
                 <div class="p-4 grid grid-cols-1 sm:grid-cols-12 gap-4">
-                    <div class="sm:col-span-2 flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">No. Urut</label>
-                        <input type="text" name="nomor_urut" id="keputusanNomorUrut" class="input-base" placeholder="Contoh: 40" value="{{ old('nomor_urut') }}" required>
-                    </div>
-                    <div class="sm:col-span-4 flex flex-col gap-1.5">
+                    <div class="sm:col-span-5 flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Tanggal SK</label>
                         <input type="date" name="tanggal_sk" id="keputusanTanggal" class="input-base" value="{{ old('tanggal_sk') }}" required>
                     </div>
-                    <div class="sm:col-span-6 flex flex-col gap-1.5">
+                    <div class="sm:col-span-7 flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Nomor SK</label>
                         <input type="text" name="nomor_sk" id="keputusanNomorSk" class="input-base" placeholder="Contoh: PD.05.02.01/40/SK/Kel.DC/VIII/2026" value="{{ old('nomor_sk') }}" required>
                     </div>
@@ -84,14 +80,13 @@
         document.getElementById('modalKeputusan').showModal();
     }
 
-    function openEditKeputusan(id, nomorUrut, tanggal, nomorSk, perihal, keterangan) {
+    function openEditKeputusan(id, tanggal, nomorSk, perihal, keterangan) {
         document.getElementById('formKeputusan').reset();
         document.getElementById('formKeputusan').action = '/surat-keputusan/' + id;
         document.getElementById('keputusanMethod').value = 'PUT';
         document.getElementById('keputusanId').value = id;
         document.getElementById('keputusanModalTitle').textContent = 'Edit Surat Keputusan';
         document.getElementById('keputusanSubmitBtn').textContent = 'Perbarui Surat Keputusan';
-        document.getElementById('keputusanNomorUrut').value = nomorUrut;
         document.getElementById('keputusanTanggal').value = tanggal;
         document.getElementById('keputusanNomorSk').value = nomorSk;
         document.getElementById('keputusanPerihal').value = perihal;
@@ -122,4 +117,3 @@
 </script>
 @endif
 @endif
-
