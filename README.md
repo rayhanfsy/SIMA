@@ -36,7 +36,7 @@ SIMA mendigitalkan buku agenda register surat (masuk, keluar, keputusan) yang se
 
 ```bash
 # 1. Clone & install dependencies
-git clone <repo-url> && cd SIMA
+git clone https://github.com/rayhanfsy/SIMA.git && cd SIMA
 composer install
 
 # 2. Setup environment
