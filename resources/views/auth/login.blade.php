@@ -54,7 +54,7 @@
                 </label>
                 <div class="flex items-center gap-3 mt-1">
                     <span class="font-mono text-lg font-medium">{{ $num1 }} + {{ $num2 }} =</span>
-                    <input type="number" name="captcha" class="input-base w-24 text-center" required placeholder="?">
+                    <input type="number" name="captcha" class="input-base w-24 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" required placeholder="?">
                 </div>
             </div>
 

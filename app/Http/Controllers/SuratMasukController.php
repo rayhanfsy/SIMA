@@ -21,8 +21,8 @@ class SuratMasukController extends Controller
 
     public function export(Request $request)
     {
-        $rows = $this->filteredQuery($request)->get()->map(fn ($s) => [
-            $s->nomor_urut,
+        $rows = $this->filteredQuery($request)->get()->sortBy('nomor_urut')->values()->map(fn ($s, $i) => [
+            $i + 1,
             $s->nomor_surat,
             \Carbon\Carbon::parse($s->tanggal_surat)->format('d-m-Y'),
             $s->pengirim,

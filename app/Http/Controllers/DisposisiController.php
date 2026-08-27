@@ -17,7 +17,8 @@ class DisposisiController extends Controller {
     }
 
     public function export(Request $request) {
-        $rows = $this->filteredQuery($request)->get()->map(fn ($d) => [
+        $rows = $this->filteredQuery($request)->get()->sortBy('id')->values()->map(fn ($d, $i) => [
+            $i + 1,
             $d->suratMasuk?->nomor_surat ?? 'Surat Dihapus',
             $d->tujuan,
             $d->sifat,
@@ -25,7 +26,7 @@ class DisposisiController extends Controller {
             $d->status,
         ]);
 
-        return ExcelExport::download('disposisi.xlsx', ['Dari Surat', 'Tujuan', 'Sifat', 'Instruksi', 'Status'], $rows);
+        return ExcelExport::download('disposisi.xlsx', ['No Urut', 'Dari Surat', 'Tujuan', 'Sifat', 'Instruksi', 'Status'], $rows);
     }
 
     private function filteredQuery(Request $request) {
