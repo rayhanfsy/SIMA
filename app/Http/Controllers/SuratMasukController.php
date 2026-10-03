@@ -49,6 +49,13 @@ class SuratMasukController extends Controller
             });
         }
 
+        if ($request->filled('dari')) {
+            $query->whereDate('tanggal_surat', '>=', $request->dari);
+        }
+        if ($request->filled('sampai')) {
+            $query->whereDate('tanggal_surat', '<=', $request->sampai);
+        }
+
         return $query;
     }
 
@@ -123,7 +130,7 @@ class SuratMasukController extends Controller
             'pengirim' => 'required|string|max:1000',
             'perihal' => 'required|string|max:2000',
             'keterangan' => 'nullable|string|max:2000',
-            'file_pdf' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp,gif|max:5120',
+            'file_pdf' => 'nullable|file|mimes:pdf|max:5120',
         ];
     }
 

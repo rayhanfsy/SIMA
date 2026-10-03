@@ -27,22 +27,32 @@
                 </select>
             </div>
 
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Tgl/No</label>
+                <input type="text" name="tgl_no" value="{{ old('tgl_no') }}" class="input-base" placeholder="Masukkan Tgl/No Surat" required>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Diteruskan Ke</label>
-                    <select name="tujuan" class="input-base" required>
+                    <select name="tujuan" class="input-base" id="tujuanSelect" required onchange="document.getElementById('tujuanTambahanContainer').classList.remove('hidden')">
                         <option value="" disabled {{ old('tujuan') ? '' : 'selected' }}>-- Pilih Tujuan --</option>
+                        <option value="Sekretaris Lurah" {{ old('tujuan') == 'Sekretaris Lurah' ? 'selected' : '' }}>Sekretaris Lurah</option>
+                        <option value="Kasi Pemerintahan" {{ old('tujuan') == 'Kasi Pemerintahan' ? 'selected' : '' }}>Kasi Pemerintahan</option>
                         <option value="Kasi Kesejahteraan Sosial" {{ old('tujuan') == 'Kasi Kesejahteraan Sosial' ? 'selected' : '' }}>Kasi Kesejahteraan Sosial</option>
                         <option value="Kasi Ekonomi dan Pembangunan" {{ old('tujuan') == 'Kasi Ekonomi dan Pembangunan' ? 'selected' : '' }}>Kasi Ekonomi dan Pembangunan</option>
-                        <option value="Kasi Pemerintahan" {{ old('tujuan') == 'Kasi Pemerintahan' ? 'selected' : '' }}>Kasi Pemerintahan</option>
-                        <option value="Sekretaris Lurah" {{ old('tujuan') == 'Sekretaris Lurah' ? 'selected' : '' }}>Sekretaris Lurah</option>
                     </select>
                 </div>
+                
+                <div class="flex flex-col gap-1.5 {{ old('tujuan') ? '' : 'hidden' }}" id="tujuanTambahanContainer">
+                    <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Tujuan Lain (No 5)</label>
+                    <input type="text" name="tujuan_tambahan" value="{{ old('tujuan_tambahan') }}" class="input-base" placeholder="Isi tujuan ke 5...">
+                </div>
+
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Sifat</label>
                     <select name="sifat" class="input-base" required>
                         <option value="Biasa" {{ old('sifat') == 'Biasa' ? 'selected' : '' }}>Biasa</option>
-                        <option value="Penting" {{ old('sifat') == 'Penting' ? 'selected' : '' }}>Penting</option>
                         <option value="Segera" {{ old('sifat') == 'Segera' ? 'selected' : '' }}>Segera</option>
                     </select>
                 </div>

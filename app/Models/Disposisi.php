@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Disposisi extends Model {
     protected $fillable = [
-        'surat_masuk_id', 'tujuan', 'sifat', 'isi_disposisi', 'status'
+        'surat_masuk_id', 'tujuan', 'tujuan_tambahan', 'sifat', 'isi_disposisi', 'status', 'tgl_no'
     ];
 
     public function suratMasuk() {

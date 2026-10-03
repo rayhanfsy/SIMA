@@ -15,20 +15,13 @@ use App\Models\AuditLog;
 // ----------------------------------------------------
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
-        $num1 = rand(1, 9);
-        $num2 = rand(1, 9);
-        session(['captcha_ans' => $num1 + $num2]);
-        
-        return view('auth.login', compact('num1', 'num2'));
+        return view('auth.login');
     })->name('login');
 
     Route::post('/login', function (Request $request) {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'captcha' => 'required|numeric|in:' . session('captcha_ans')
-        ], [
-            'captcha.in' => 'Jawaban matematika salah.'
         ]);
         
         // Logika Autentikasi Bawaan Laravel
@@ -93,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/surat-keputusan/{suratKeputusan}', [SuratKeputusanController::class, 'destroy'])->name('surat-keputusan.destroy');
 
     Route::get('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'index'])->name('disposisi');
+    Route::get('/disposisi/{disposisi}/cetak', [\App\Http\Controllers\DisposisiController::class, 'cetak'])->name('disposisi.cetak');
     Route::get('/disposisi/export', [\App\Http\Controllers\DisposisiController::class, 'export'])->name('disposisi.export');
     Route::post('/disposisi', [\App\Http\Controllers\DisposisiController::class, 'store'])->name('disposisi.store');
     Route::put('/disposisi/{disposisi}', [\App\Http\Controllers\DisposisiController::class, 'update'])->name('disposisi.update');

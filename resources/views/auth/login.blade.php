@@ -23,11 +23,6 @@
         </div>
         @enderror
 
-        @error('captcha')
-        <div class="mb-6 p-3 rounded-md bg-paleRed text-inkRed text-sm text-center border border-[#F5D5D6]">
-            <i class="ph ph-shield-warning"></i> {{ $message }}
-        </div>
-        @enderror
 
         <form method="POST" action="{{ route('login.post') }}" class="flex flex-col gap-5">
             @csrf
@@ -47,16 +42,6 @@
                 </div>
             </div>
 
-            <!-- Local Math Captcha -->
-            <div class="flex flex-col gap-1.5 p-4 border border-borderline rounded-md bg-canvas @error('captcha') border-inkRed @enderror">
-                <label class="text-sm font-medium flex items-center gap-2">
-                    <i class="ph ph-shield-check text-muted"></i> Verifikasi Keamanan
-                </label>
-                <div class="flex items-center gap-3 mt-1">
-                    <span class="font-mono text-lg font-medium">{{ $num1 }} + {{ $num2 }} =</span>
-                    <input type="number" name="captcha" class="input-base w-24 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" required placeholder="?">
-                </div>
-            </div>
 
             <button type="submit" class="btn-primary mt-2 w-full">Masuk</button>
         </form>

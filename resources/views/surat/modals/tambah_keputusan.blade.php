@@ -44,15 +44,15 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Dokumen / Foto SK</label>
+                <label class="text-xs font-medium text-muted uppercase tracking-[0.05em]">Dokumen SK</label>
                 <input
                     type="file"
                     name="file_pdf"
-                    accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,application/pdf,image/jpeg,image/png,image/webp,image/gif"
+                    accept=".pdf,application/pdf"
                     onchange="previewSelectedRegisterFile(this, 'keputusanFilePreview', 'keputusanFileName')"
                     class="border border-borderline border-dashed rounded-md px-3 py-3 text-sm cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-canvas file:text-ink"
                 >
-                <p id="keputusanFileHint" class="text-xs text-muted">PDF, JPG, JPEG, PNG, WEBP, atau GIF. Maksimal 5 MB.</p>
+                <p id="keputusanFileHint" class="text-xs text-muted">PDF. Maksimal 5 MB.</p>
                 <div id="keputusanFileName" class="text-xs text-muted"></div>
                 <img id="keputusanFilePreview" class="hidden mt-1 max-h-48 max-w-full rounded-md border border-borderline object-contain bg-canvas" alt="Pratinjau gambar yang dipilih">
             </div>
@@ -74,7 +74,7 @@
         document.getElementById('keputusanId').value = '';
         document.getElementById('keputusanModalTitle').textContent = 'Tambah Surat Keputusan';
         document.getElementById('keputusanSubmitBtn').textContent = 'Simpan Surat Keputusan';
-        document.getElementById('keputusanFileHint').textContent = 'PDF, JPG, JPEG, PNG, WEBP, atau GIF. Maksimal 5 MB.';
+        document.getElementById('keputusanFileHint').textContent = 'PDF. Maksimal 5 MB.';
         document.getElementById('keputusanFileName').textContent = '';
         document.getElementById('keputusanFilePreview').classList.add('hidden');
         document.getElementById('modalKeputusan').showModal();

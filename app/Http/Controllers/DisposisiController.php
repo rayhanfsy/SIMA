@@ -43,6 +43,13 @@ class DisposisiController extends Controller {
             });
         }
 
+        if ($request->filled('dari')) {
+            $query->whereDate('created_at', '>=', $request->dari);
+        }
+        if ($request->filled('sampai')) {
+            $query->whereDate('created_at', '<=', $request->sampai);
+        }
+
         return $query;
     }
 
@@ -51,9 +58,11 @@ class DisposisiController extends Controller {
 
         $data = $request->validate([
             'surat_masuk_id' => 'required|exists:surat_masuks,id',
-            'tujuan' => 'required|string|in:Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan,Kasi Pemerintahan,Sekretaris Lurah',
-            'sifat' => 'required|string|in:Biasa,Penting,Segera',
+            'tujuan' => 'required|string|in:Sekretaris Lurah,Kasi Pemerintahan,Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan',
+            'tujuan_tambahan' => 'nullable|string',
+            'sifat' => 'required|string|in:Biasa,Segera',
             'isi_disposisi' => 'required|string',
+            'tgl_no' => 'required|string',
         ]);
 
         $disposisi = Disposisi::create($data);
@@ -67,9 +76,11 @@ class DisposisiController extends Controller {
         abort_unless(auth()->user()->hasRole('lurah', 'admin'), 403);
 
         $data = $request->validate([
-            'tujuan' => 'required|string|in:Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan,Kasi Pemerintahan,Sekretaris Lurah',
-            'sifat' => 'required|string|in:Biasa,Penting,Segera',
+            'tujuan' => 'required|string|in:Sekretaris Lurah,Kasi Pemerintahan,Kasi Kesejahteraan Sosial,Kasi Ekonomi dan Pembangunan',
+            'tujuan_tambahan' => 'nullable|string',
+            'sifat' => 'required|string|in:Biasa,Segera',
             'isi_disposisi' => 'required|string',
+            'tgl_no' => 'required|string',
         ]);
 
         $disposisi->update($data);
@@ -87,5 +98,10 @@ class DisposisiController extends Controller {
         AuditLog::log('DATA.MUTATION', "Menyelesaikan disposisi ID {$disposisi->id}.");
 
         return back()->with('success', 'Disposisi ditandai selesai.');
+    }
+
+    public function cetak(Disposisi $disposisi) {
+        $disposisi->load('suratMasuk');
+        return view('surat.cetak_disposisi', compact('disposisi'));
     }
 }

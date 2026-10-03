@@ -47,6 +47,13 @@ class SuratKeputusanController extends Controller
             });
         }
 
+        if ($request->filled('dari')) {
+            $query->whereDate('tanggal_sk', '>=', $request->dari);
+        }
+        if ($request->filled('sampai')) {
+            $query->whereDate('tanggal_sk', '<=', $request->sampai);
+        }
+
         return $query;
     }
 
@@ -115,7 +122,7 @@ class SuratKeputusanController extends Controller
             'tanggal_sk' => 'required|date',
             'perihal' => 'required|string|max:2000',
             'keterangan' => 'nullable|string|max:2000',
-            'file_pdf' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp,gif|max:5120',
+            'file_pdf' => 'nullable|file|mimes:pdf|max:5120',
         ];
     }
 

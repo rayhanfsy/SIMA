@@ -20,26 +20,37 @@
     </div>
 @endif
 
-<div class="mb-6 flex justify-between items-center reveal" style="transition-delay: 50ms;">
-    <form action="{{ route('surat-keputusan') }}" method="GET" class="relative w-full max-w-xl">
-        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg"></i>
-        <input
-            type="text"
-            name="search"
-            value="{{ request('search') }}"
-            placeholder="Cari no. urut, nomor SK, perihal, atau keterangan..."
-            class="w-full pl-10 pr-10 py-2.5 text-sm bg-surface border border-borderline rounded-md focus:border-ink focus:outline-none transition-colors"
-            autocomplete="off"
-        >
-        @if(request('search'))
-            <a href="{{ route('surat-keputusan') }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-inkRed transition-colors" title="Hapus pencarian">
-                <i class="ph ph-x"></i>
-            </a>
+<div class="mb-6 flex flex-col gap-3 reveal" style="transition-delay: 50ms;">
+    <form id="filterForm" action="{{ route('surat-keputusan') }}" method="GET" class="flex flex-wrap items-end gap-3">
+        <div class="relative w-full max-w-sm">
+            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg"></i>
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari no. urut, nomor SK, perihal, atau keterangan..."
+                class="input-base w-full !pl-10"
+                autocomplete="off"
+            >
+        </div>
+        <div class="flex items-center gap-2">
+            <label class="text-sm text-muted shrink-0">Dari</label>
+            <input type="date" name="dari" value="{{ request('dari') }}" class="input-base">
+        </div>
+        <div class="flex items-center gap-2">
+            <label class="text-sm text-muted shrink-0">Sampai</label>
+            <input type="date" name="sampai" value="{{ request('sampai') }}" class="input-base">
+        </div>
+        <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm border border-borderline rounded-md hover:bg-canvas transition-colors shrink-0">
+            <i class="ph ph-funnel text-base"></i> Filter
+        </button>
+        @if(request()->hasAny(['search', 'dari', 'sampai']))
+            <a href="{{ route('surat-keputusan') }}" class="text-sm text-muted hover:text-inkRed transition-colors">Reset</a>
         @endif
+        <a href="{{ route('surat-keputusan.export', request()->only('search', 'dari', 'sampai')) }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm border border-borderline rounded-md hover:bg-canvas transition-colors shrink-0 ml-auto">
+            <i class="ph ph-microsoft-excel-logo text-base"></i> Export Excel
+        </a>
     </form>
-    <a href="{{ route('surat-keputusan.export', request()->only('search')) }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-sm border border-borderline rounded-md hover:bg-canvas transition-colors shrink-0">
-        <i class="ph ph-microsoft-excel-logo text-base"></i> Export Excel
-    </a>
 </div>
 
 <section class="bento-card !p-0 overflow-hidden reveal" style="transition-delay: 100ms;">
